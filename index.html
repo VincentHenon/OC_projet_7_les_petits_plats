@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>Les Petits Plats</title>
+</head>
+<body>
+    <header>
+        <img class="header_bg" src="./assets/images/banner_bg.png" alt="image d'illustration d'un plat comme image de fond" />
+        <img class="header_logo"src="./assets/logos/header_logo.png" alt="logo de l'entreprise les petits plats">
+        
+        <div class="search_wrapper">
+            <h1 class="header_hero">CHERCHEZ PARMI PLUS DE 1500 RECETTES 
+                DU QUOTIDIEN,SIMPLES ET DÉLICIEUSES
+            </h1>
+            <form>
+                <input type="text" id="search_input" placeholder="Rechercher une recette">
+                <div class="magnifyGlass_bg">
+                    <span class="magnifyGlass_circle"></span>
+                    <span class="magnifyGlass_line"></span>
+                </div>
+            </form>
+        </div>
+        
+    </header>
+    <main>
+        <section class="filters">
+            <div class="filters_dropdown_wrapper">
+                <div class="drop_btn btn_ingredients">
+                    <div class="drop_top">
+                        <p class="text_ingredients">Ingredients</p>
+                        <img class="chevron" src="./assets/icons/chevron.svg" alt="chevron" />
+                    </div>
+                    <div class="result result_close">
+                        <input type="text" id="ingredients_search" class="input_dropdown">
+                        <div class="magnifyGlass_bg_small">
+                            <span class="magnifyGlass_circle_small"></span>
+                            <span class="magnifyGlass_line_small"></span>
+                        </div>
+                        <ul class="result_list"></ul>
+                    </div>
+                </div>
+                <div class="drop_btn btn_appareils">
+                    <div class="drop_top">
+                        <p class="text_appareils">Appareils</p>
+                        <img class="chevron" src="./assets/icons/chevron.svg" alt="chevron" />
+                    </div>
+                    <div class="result result_close">
+                        <input type="text" id="appareils_search" class="input_dropdown">
+                        <div class="magnifyGlass_bg_small">
+                            <span class="magnifyGlass_circle_small"></span>
+                            <span class="magnifyGlass_line_small"></span>
+                        </div>
+                        <ul class="result_list"></ul>
+                    </div>
+                </div>
+                <div class="drop_btn btn_utensils">
+                    <div class="drop_top">
+                        <p class="text_utensils">Ustensiles</p>
+                        <img class="chevron" src="./assets/icons/chevron.svg" alt="chevron" />
+                    </div>  
+                    <div class="result result_close">
+                        <input type="text" id="utensils_search" class="input_dropdown">
+                        <div class="magnifyGlass_bg_small">
+                            <span class="magnifyGlass_circle_small"></span>
+                            <span class="magnifyGlass_line_small"></span>
+                        </div>
+                        <ul class="result_list"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="filters_tags_wrapper">
+                <!-- tags go here -->
+            </div>
+        </section>
+        <section id="recipes">
+            <!-- articles go here -->
+        </section>
+    </main>
+</body>
+<script src="./script/factories/factory_recipes.js"></script>
+<script src="./script/utils/fetch_recipes.js"></script> 
+<!-- <script src="./script/utils/filters.js"></script> -->
+<!-- <script src="./script/utils/ingredientFilter.js"></script> -->
+<script src="./script/utils/filterList.js"></script>
+<!-- <script src="./script/utils/filterTag.js"></script> -->
+</html>
