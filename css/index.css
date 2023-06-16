@@ -97,6 +97,17 @@ header {
     position: relative;
 }
 
+.input_Xmark {
+    display: none;
+    position: absolute;
+    top: 25px;
+    right: 70px;
+}
+
+.XmarkShow {
+    display: block;
+}
+
 
 .magnifyGlass_bg{
     position: absolute;
@@ -146,6 +157,7 @@ header {
 /*___dropdown buttons*/
 .filters {
     margin-bottom: 55px;
+    position: relative;
 }
 
 .filters_dropdown_wrapper {
@@ -334,6 +346,15 @@ header {
     transition: all .3s ease;
 }
 
+.recipes_counter {
+    position: absolute;
+    right: 0;
+    top:40px;
+    font-family: 'Anton', sans-serif;
+    font-size: 21px;
+    font-weight: 400;
+}
+
 /* TAGS */
 
 .filters_tags_wrapper {
@@ -487,4 +508,17 @@ header {
     font-size: 14px;
     line-height: 19px;
     color: #1B1B1B;
+}
+
+
+
+#error {
+    height: 200px;
+    width: 100%;
+}
+
+#error p {
+    font-size: 24px;
+    color: red;
+    text-align: center;
 }

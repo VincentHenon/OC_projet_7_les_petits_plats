@@ -60,3 +60,19 @@ function createCard(recipe) {
   // Return the card
   return card;
 }
+
+function recipesCounter() {
+  const counterWrapper = document.querySelector(".recipes_counter");
+  const count = filteredRecipes.length;
+  console.log("count size is ⬇︎");
+  console.log(count);
+
+  counterWrapper.innerHTML = "";
+  count <= 1 ? counterWrapper.innerHTML = `<p>${count} recette</p>` : counterWrapper.innerHTML = `<p>${count} recettes</p>`;
+
+  if (count === 0) {
+    console.log("count is 0");
+    const error = `<p>😢 Aucune recette n'a été trouvée, veuillez modifier votre recherche.</p>`
+    document.getElementById("error").innerHTML = error;
+  }
+}

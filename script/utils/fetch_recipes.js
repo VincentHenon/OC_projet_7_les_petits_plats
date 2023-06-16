@@ -1,7 +1,3 @@
-let ingredientFilter = [];
-let applianceFilter = [];
-let utensilFilter = [];
-
 let allRecipes = [];
 let filteredRecipes = [];
 
@@ -9,7 +5,13 @@ let ingredientList = [];
 let utensilList = [];
 let applianceList = [];
 
-//let allFilters = [ ingredientFilter, applianceFilter, utensilFilter ];
+let ingredientNewList = [];
+let utensilNewList = [];
+let applianceNewList = [];
+
+let tagList = [];
+let searchValue = "";
+
 
 init();
 
@@ -29,9 +31,14 @@ async function init() {
   allRecipes = recipes.recipes;
   filteredRecipes = allRecipes;
 
-  ingredientList = getIngredientList(filteredRecipes); // complete ingredient list
-  utensilList = getUtensilList(filteredRecipes);  // complete utensil list
-  applianceList = getApplianceList(filteredRecipes);  // complete appliance list
-
+  filter();
   displayGallery(allRecipes);
+  recipesCounter(filteredRecipes);
+}
+
+function filter() {
+  getIngredientList();
+  getApplianceList();
+  getUtensilList();
+  checkSearchBar();
 }

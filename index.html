@@ -18,6 +18,11 @@
             </h1>
             <form>
                 <input type="text" id="search_input" placeholder="Rechercher une recette">
+                <div class="input_Xmark">
+                    <svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 11.5L7 6.5M7 6.5L2 1.5M7 6.5L12 1.5M7 6.5L2 11.5" stroke="#7A7A7A" stroke-width="2.16667" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
                 <div class="magnifyGlass_bg">
                     <span class="magnifyGlass_circle"></span>
                     <span class="magnifyGlass_line"></span>
@@ -72,6 +77,9 @@
                     </div>
                 </div>
             </div>
+            <div class="recipes_counter">
+                <!-- recipes counter -->
+            </div>
             <div class="filters_tags_wrapper">
                 <!-- tags go here -->
             </div>
@@ -79,12 +87,13 @@
         <section id="recipes">
             <!-- articles go here -->
         </section>
+        <section id="error">
+            <!-- error goes here -->
+        </section>
     </main>
 </body>
 <script src="./script/factories/factory_recipes.js"></script>
 <script src="./script/utils/fetch_recipes.js"></script> 
-<!-- <script src="./script/utils/filters.js"></script> -->
-<!-- <script src="./script/utils/ingredientFilter.js"></script> -->
+<script src="./script/utils/searchbar.js"></script>
 <script src="./script/utils/filterList.js"></script>
-<!-- <script src="./script/utils/filterTag.js"></script> -->
 </html>

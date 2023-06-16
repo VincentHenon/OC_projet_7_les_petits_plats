@@ -1,11 +1,9 @@
 // getting all lists from the recipes
-function getIngredientList(filteredRecipes) {
-
-  // ingredientList = []; //clear previous List
-
+function getIngredientList() {
   const ingredientBtn = document.querySelector(".btn_ingredients");
   const ingredientMenu = ingredientBtn.querySelector(".result_list");
 
+  // create a set to get the list without duplicate.
   const ingredientSet = new Set();
 
   filteredRecipes.forEach((recipe) => {
@@ -16,25 +14,22 @@ function getIngredientList(filteredRecipes) {
   });
 
   // store the list found.
-  ingredientList = Array.from(ingredientSet);  
-
+    ingredientList = Array.from(ingredientSet);  
+  
   // display the initial list once only.
   displayMenu(ingredientList, ingredientMenu); 
-  
-  // create a new empty array.
-  let ingredientNewList = [];
 
   // check the events.
-  ingredientNewList = checkUserInteractions(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList); 
-
-  return ingredientNewList;
+    ingredientNewList = checkListClick(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
+    ingredientNewList = checkInputField(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
 }
 
-function getApplianceList(filteredRecipes) {
-  //applianceList = [];
+function getApplianceList() {
+  // applianceList = [];
   const applianceBtn = document.querySelector(".btn_appareils");
   const applianceMenu = applianceBtn.querySelector(".result_list");
 
+  // create a set to get the list without duplicate.
   const applianceSet = new Set();
 
   filteredRecipes.forEach((recipe) => {
@@ -48,19 +43,16 @@ function getApplianceList(filteredRecipes) {
   // display the initial list once only.
   displayMenu(applianceList, applianceMenu);
   
-  // create a new empty array.
-  let applianceNewList = [];
-  
   // check the events.
-  applianceNewList = checkUserInteractions(applianceList, applianceMenu, applianceBtn, applianceNewList);
-
-  return applianceNewList;
+  applianceNewList = checkListClick(applianceList, applianceMenu, applianceBtn, applianceNewList);
+  applianceNewList = checkInputField(applianceList, applianceMenu, applianceBtn, applianceNewList);
 }
 
-function getUtensilList(filteredRecipes) {
+function getUtensilList(s) {
   const utensilBtn = document.querySelector(".btn_utensils");
   const utensilMenu = utensilBtn.querySelector(".result_list");
 
+  // create a set to get the list without duplicate.
   const utensilSet = new Set();
 
   filteredRecipes.forEach((recipe) => {
@@ -75,29 +67,19 @@ function getUtensilList(filteredRecipes) {
   // display the initial list once only.
   displayMenu(utensilList, utensilMenu);
 
-  // create a new empty array.
-  let utensilNewList = [];
+
 
   // check the events.
-  utensilNewList = checkUserInteractions(utensilList, utensilMenu, utensilBtn, utensilNewList);
-
-  return utensilNewList;
+  utensilNewList = checkListClick(utensilList, utensilMenu, utensilBtn, utensilNewList);
+  utensilNewList = checkInputField(utensilList, utensilMenu, utensilBtn, utensilNewList);
 }
 
-
-// all functions to handle the filters and to display the tags.
-function checkUserInteractions(list, menu, btn, newList) {
-  newList = checkListClick(list, menu, btn, newList);
-  newList = checkInputField(list, menu, btn, newList);
-  return newList;
-}
-
-function checkListClick(list, menu, btn, newList) {
+function checkListClick(list, menu, newList) {
   const menuEl = menu.getElementsByTagName("li");
 
   // read through all <li> tags found
   [...menuEl].forEach((li) => {
-    // liten to them
+    // listen to them
     li.addEventListener("click", () => {
       // get the text from the HTML element.
       let selectedItem = li.textContent;
@@ -108,22 +90,42 @@ function checkListClick(list, menu, btn, newList) {
       );
 
       // update the HTML and create the TAG.
-      updateDisplay(newList, menu, btn);
-      createTag(newList, menu, btn, list);
+      updateDisplay(newList, menu);
+      createTag(newList, menu);
     });
   });
   return newList;
 }
 
-function getFilteredRecipes(newList) {
-    // check inside all recipes if newList occurs.
-    filteredRecipes = allRecipes.filter(recipe =>
-        // find matching items within ingredients, ustensils, appliance and store them
-        recipe.ingredients.some(item => item.ingredient.toLowerCase().includes(newList)) 
-        || recipe.appliance.toLowerCase().includes(newList) 
-        || recipe.ustensils.some(item => item.toLowerCase().includes(newList))
-    );
-    
+function getFilteredRecipes() {
+
+    console.log("tagList is ⬇︎");
+    console.log(tagList);
+    filteredRecipes = allRecipes;
+
+    filteredRecipes = filteredRecipes.filter(recipe =>
+        recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchBar.value.toLowerCase()) ||
+        recipe.description.toLowerCase().includes(searchBar.value.toLowerCase()) ||
+        recipe.name.includes(searchBar.value.toLowerCase()))
+    )
+    console.log("filtered recipes by search ⬇︎");
+    console.log(filteredRecipes);
+
+    if (tagList.length !== 0) {
+        filteredRecipes = filteredRecipes.filter(recipe =>
+            tagList.every(tag =>
+                recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
+                recipe.appliance.toLowerCase().includes(tag) ||
+                recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+                )
+            )
+        )
+        console.log("filtered recipes by tag ⬇︎");
+        console.log(filteredRecipes);
+    }
+    // relaunch the whole process.
+    filter(filteredRecipes);
+    recipesCounter() // create the recipes' counter
     return filteredRecipes;
 }
 
@@ -169,6 +171,10 @@ function updateDisplay(newList, menu) {
     // if list is not empty then we build the menu
     const listEl = newList.map((item) => `<li>${item}</li>`).join("");
     menu.innerHTML = listEl;
+  }
+  else if (newList.length === 1){
+    const listEl = `<p>${item}</p>`;
+    menu.innerHTML = listEl;
   } else {
     // else there is no result
     const noResult = `<p class="noResult">Aucun résultat</p>`;
@@ -176,62 +182,72 @@ function updateDisplay(newList, menu) {
   }
 }
 
-function createTag(newList, menu, btn, list) {
+function createTag(newList, menu) {
   
-  const tagName = menu.querySelector("li").textContent;
-  const tagWrapper = document.querySelector(".filters_tags_wrapper");
-  //tagWrapper.innerHTML = "";
+    // extract the name's tag from the menu
+    const tagName = menu.querySelector("li").textContent;
+    let tagEl;
+    const tagWrapper = document.querySelector(".filters_tags_wrapper");
 
-  // render the filter tag.
-  const tagEl = document.createElement("div");
-  tagEl.classList.add("filters_tag");
-  tagEl.innerHTML = `
-        <p class="tag_content">${tagName}</p>
-        <img class="tag_xmark" src="./assets/icons/xMark.svg" alt="icone d'une croix" />`;
-  tagWrapper.appendChild(tagEl);
+    // if new tag is not in the tagList, push it in the array and display it
+    if (!tagList.includes(tagName)) {
+        tagList.push(tagName);
 
-  const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
-  menu.innerHTML = listEl;
+    // render the filter tag.
+    tagEl = document.createElement("div");
+    tagEl.classList.add("filters_tag");
+    tagEl.innerHTML = `
+            <p class="tag_content">${tagName}</p>
+            <img class="tag_xmark" src="./assets/icons/xMark.svg" alt="icone d'une croix" />`;
+    tagWrapper.appendChild(tagEl);
+    }
 
-  const tag_Xmark = document.querySelectorAll(".tag_xmark");
-  const selectedItem_Xmark = document.querySelectorAll(".selected_xmark");
+    // update the filtered recipes variable.
+    filteredRecipes = getFilteredRecipes(tagList);
 
-  // update the filtered recipes variable
-  filteredRecipes = getFilteredRecipes(newList);
-  console.log(filteredRecipes);
+    // render cards again.
+    displayGallery(filteredRecipes);
 
-  //RENDER CARDS AGAIN WITH UNFILTEREDRECIPES;
-  displayGallery(filteredRecipes);
+    // relaunch the whole process.
+    //filter(filteredRecipes);
 
-  // relaunch the whole process.
-  getIngredientList(filteredRecipes);
-  getApplianceList(filteredRecipes);
-  getUtensilList(filteredRecipes);
+    // display short list inside the menu
+    const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
+    menu.innerHTML = listEl;
 
-  // listen to the event.
-  selectedItem_Xmark.forEach((xMark) => { 
-    xMark.addEventListener("click", (e) => {
-        removeFilter(newList,tagWrapper, tagEl, list)
+    const tag_Xmark = document.querySelectorAll(".tag_xmark");
+    const selectedItem_Xmark = document.querySelectorAll(".selected_xmark");
+
+    // listen to the event.
+    selectedItem_Xmark.forEach((selectedItem) => { 
+        selectedItem.addEventListener("click", () => {
+            removeTag(tagEl)
+        })
     })
-  })
-  // listen to the event.
-  tag_Xmark.forEach((xMark) => { 
-    xMark.addEventListener("click", (e) => {
-    removeFilter(newList, tagWrapper, tagEl, list)
-    }) 
-  })
+    // listen to the event.
+    tag_Xmark.forEach((tag) => { 
+        tag.addEventListener("click", () => {
+            removeTag(tagEl)
+        }) 
+    })
 }
 
-function removeFilter(newList, tagWrapper, tagEl, list) {
-    // remove the filter tag.
-    tagWrapper.removeChild(tagEl);
+function removeTag(tagEl) {
     
-    // reset the list.
-    newList = list;
+    let tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
+
+    // remove the tag from the tagList.
+    tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
+
     // reset the filtered recipes.
-    filteredRecipes = allRecipes;
-    // relaunch the whole process.
-    getIngredientList(filteredRecipes);
-    getApplianceList(filteredRecipes);
-    getUtensilList(filteredRecipes);
+    filteredRecipes = getFilteredRecipes(); // passer en paramètre => la liste des tags.
+
+    // remove the filter tag.
+    tagEl.remove();
+
+    // display the gallery
+    displayGallery(filteredRecipes);
+
+    // relaunch the whole process and create the loop.
+    //filter(filteredRecipes);
 }
