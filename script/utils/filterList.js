@@ -98,64 +98,6 @@ function checkListClick(list, menu, newList) {
   return newList;
 }
 
-function getFilteredRecipes() {
-
-  console.log("tagList is ⬇︎");
-  console.log(tagList.length, "tag(s)")
-  //console.log(tagList);
-  let tempFilteredRecipes = [];
-  filteredRecipes = allRecipes;
-
-  /*// METHOD FOR()
-  for (let i = 0; i < filteredRecipes.length; i++) {
-    const { name, description, ingredients } = filteredRecipes[i];
-    
-    const includedInName = 
-      name.toLowerCase().includes(searchBar.value.toLowerCase());
-    
-    const includedInDescription = 
-      description.toLowerCase().includes(searchBar.value.toLowerCase());
-    
-    const includedInIngredients = ingredients.some(({ ingredient }) =>
-      ingredient.toLowerCase().includes(searchBar.value.toLowerCase())
-    );
-    
-    if (includedInName || includedInDescription || includedInIngredients) {
-      tempFilteredRecipes.push(filteredRecipes[i]);
-      filteredRecipes = tempFilteredRecipes;
-    }
-  }*/
-
-  // METHOD FILTER()
-  filteredRecipes = filteredRecipes.filter(recipe =>
-    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchBar.value.toLowerCase()) ||
-    recipe.description.toLowerCase().includes(searchBar.value.toLowerCase()) ||
-    recipe.name.includes(searchBar.value.toLowerCase()))
-  )
-
-console.log("filtered recipes by search ⬇︎");
-console.log(filteredRecipes.length, "recette(s)")
-//console.log(filteredRecipes);
-
-  if (tagList.length !== 0) {
-      filteredRecipes = filteredRecipes.filter(recipe =>
-          tagList.every(tag =>
-              recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
-              recipe.appliance.toLowerCase().includes(tag) ||
-              recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-              )
-          )
-      )
-      console.log("filtered recipes by tag ⬇︎");
-      console.log(filteredRecipes.length, "recette(s)")
-      //console.log(filteredRecipes);
-  }
-  // relaunch the whole process.
-  filter(filteredRecipes);
-  recipesCounter() // create the recipes' counter
-  return filteredRecipes;
-}
-
 function checkInputField(list, menu, btn, newList) {
   const inputEl = btn.querySelector(".input_dropdown");
 
@@ -277,4 +219,62 @@ function removeTag(tagEl) {
 
     // relaunch the whole process and create the loop.
     //filter(filteredRecipes);
+}
+
+
+
+function getFilteredRecipes() {
+
+  console.log("tagList is ⬇︎");
+  console.log(tagList.length, "tag(s)")
+  //console.log(tagList);
+
+  let tempFilteredRecipes = [];
+  filteredRecipes = allRecipes;
+  const searchValue = searchBar.value.toLowerCase();
+
+  /*// METHOD FOR()
+  filteredRecipes.forEach((recipe) => {
+    const { name, description, ingredients } = recipe;
+    const isNameMatch = name.toLowerCase().includes(searchValue);
+    const isDescriptionMatch = description.toLowerCase().includes(searchValue);
+    const isIngredientMatch = ingredients.some(({ ingredient }) =>
+      ingredient.toLowerCase().includes(searchValue)
+    );
+  
+    if (isNameMatch || isDescriptionMatch || isIngredientMatch) {
+      tempFilteredRecipes.push(recipe);
+    }
+  });
+  
+  filteredRecipes = tempFilteredRecipes;*/
+
+  // METHOD FILTER()
+  filteredRecipes = filteredRecipes.filter(recipe =>
+    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue) ||
+    recipe.description.toLowerCase().includes(searchValue) ||
+    recipe.name.includes(searchValue))
+  )
+
+console.log("filtered recipes by search ⬇︎");
+console.log(filteredRecipes.length, "recette(s)")
+//console.log(filteredRecipes);*/
+
+  if (tagList.length !== 0) {
+      filteredRecipes = filteredRecipes.filter(recipe =>
+          tagList.every(tag =>
+              recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
+              recipe.appliance.toLowerCase().includes(tag) ||
+              recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+              )
+          )
+      )
+      console.log("filtered recipes by tag ⬇︎");
+      console.log(filteredRecipes.length, "recette(s)")
+      //console.log(filteredRecipes);
+  }
+  // relaunch the whole process.
+  filter(filteredRecipes);
+  recipesCounter() // create the recipes' counter
+  return filteredRecipes;
 }

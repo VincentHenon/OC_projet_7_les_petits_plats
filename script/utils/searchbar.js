@@ -6,28 +6,23 @@ function checkSearchBar() {
     searchBar.addEventListener("input", () => {
         // if user click on the search button
         magnifyGlass.addEventListener("click", () => {
-            // filter the recippes
-            if (searchBar.value.length >=3) {
-                filteredRecipes = getFilteredRecipes();
-                // render cards again.
-                displayGallery(filteredRecipes);
+            launchSearch();
+        })
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                launchSearch();
             }
-            else {
-                searchBar.value = "";
-                searchBar.placeholder = "veuillez entrer 3 caractères minimum...";
-                xMarkEl.classList.remove("XmarkShow");
+            if (e.key === "Escape") {
+                e.preventDefault();
+                emptySearch();
             }
         })
 
         if (searchBar.value.length !== 0) {
             xMarkEl.classList.add("XmarkShow");
             xMarkEl.addEventListener("click", () => {
-                searchBar.placeholder = "Recherchez une recette";
-                searchBar.value = "";
-                xMarkEl.classList.remove("XmarkShow");
-                filteredRecipes = getFilteredRecipes();
-                // render cards again.
-                displayGallery(filteredRecipes);
+                emptySearch();
             })
         }
         else {
@@ -36,4 +31,27 @@ function checkSearchBar() {
         }
     })
     return filteredRecipes;
+}
+
+function launchSearch() {
+    // filter the recipes
+    if (searchBar.value.length >=3) {
+        filteredRecipes = getFilteredRecipes();
+        // render cards again.
+        displayGallery(filteredRecipes);
+    }
+    else {
+        searchBar.value = "";
+        searchBar.placeholder = "veuillez entrer 3 caractères minimum...";
+        xMarkEl.classList.remove("XmarkShow");
+    }
+}
+
+function emptySearch() {
+    searchBar.placeholder = "Recherchez une recette";
+    searchBar.value = "";
+    xMarkEl.classList.remove("XmarkShow");
+    filteredRecipes = getFilteredRecipes();
+    // render cards again.
+    displayGallery(filteredRecipes);
 }
