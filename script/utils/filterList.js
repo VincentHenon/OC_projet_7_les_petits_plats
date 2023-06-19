@@ -74,6 +74,7 @@ function getUtensilList(s) {
   utensilNewList = checkInputField(utensilList, utensilMenu, utensilBtn, utensilNewList);
 }
 
+// factorised functions
 function checkListClick(list, menu, newList) {
   const menuEl = menu.getElementsByTagName("li");
 
@@ -99,34 +100,60 @@ function checkListClick(list, menu, newList) {
 
 function getFilteredRecipes() {
 
-    console.log("tagList is ⬇︎");
-    console.log(tagList);
-    filteredRecipes = allRecipes;
+  console.log("tagList is ⬇︎");
+  console.log(tagList.length, "tag(s)")
+  //console.log(tagList);
+  let tempFilteredRecipes = [];
+  filteredRecipes = allRecipes;
 
-    filteredRecipes = filteredRecipes.filter(recipe =>
-        recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchBar.value.toLowerCase()) ||
-        recipe.description.toLowerCase().includes(searchBar.value.toLowerCase()) ||
-        recipe.name.includes(searchBar.value.toLowerCase()))
-    )
-    console.log("filtered recipes by search ⬇︎");
-    console.log(filteredRecipes);
-
-    if (tagList.length !== 0) {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-            tagList.every(tag =>
-                recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
-                recipe.appliance.toLowerCase().includes(tag) ||
-                recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-                )
-            )
-        )
-        console.log("filtered recipes by tag ⬇︎");
-        console.log(filteredRecipes);
+  /*// METHOD FOR()
+  for (let i = 0; i < filteredRecipes.length; i++) {
+    const { name, description, ingredients } = filteredRecipes[i];
+    
+    const includedInName = 
+      name.toLowerCase().includes(searchBar.value.toLowerCase());
+    
+    const includedInDescription = 
+      description.toLowerCase().includes(searchBar.value.toLowerCase());
+    
+    const includedInIngredients = ingredients.some(({ ingredient }) =>
+      ingredient.toLowerCase().includes(searchBar.value.toLowerCase())
+    );
+    
+    if (includedInName || includedInDescription || includedInIngredients) {
+      tempFilteredRecipes.push(filteredRecipes[i]);
+      filteredRecipes = tempFilteredRecipes;
     }
-    // relaunch the whole process.
-    filter(filteredRecipes);
-    recipesCounter() // create the recipes' counter
-    return filteredRecipes;
+  }*/
+
+  // METHOD FILTER()
+  filteredRecipes = filteredRecipes.filter(recipe =>
+    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchBar.value.toLowerCase()) ||
+    recipe.description.toLowerCase().includes(searchBar.value.toLowerCase()) ||
+    recipe.name.includes(searchBar.value.toLowerCase()))
+  )
+
+console.log("filtered recipes by search ⬇︎");
+console.log(filteredRecipes.length, "recette(s)")
+//console.log(filteredRecipes);
+
+  if (tagList.length !== 0) {
+      filteredRecipes = filteredRecipes.filter(recipe =>
+          tagList.every(tag =>
+              recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
+              recipe.appliance.toLowerCase().includes(tag) ||
+              recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+              )
+          )
+      )
+      console.log("filtered recipes by tag ⬇︎");
+      console.log(filteredRecipes.length, "recette(s)")
+      //console.log(filteredRecipes);
+  }
+  // relaunch the whole process.
+  filter(filteredRecipes);
+  recipesCounter() // create the recipes' counter
+  return filteredRecipes;
 }
 
 function checkInputField(list, menu, btn, newList) {
@@ -161,7 +188,7 @@ function displayMenu(list, menu) {
     // render the menu
     let listEl = list.map((item) => `<li>${item}</li>`).join(""); 
     menu.innerHTML = listEl;
-  }
+}
 
 function updateDisplay(newList, menu) {
   // clear the current menu.

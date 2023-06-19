@@ -2,7 +2,6 @@ function displayGallery(filteredRecipes) {
   const section = document.getElementById("recipes");
   section.innerHTML = "";
 
-  //if (filteredRecipes !== allRecipes) {
     filteredRecipes.forEach((recipe) => {
       const { id } = recipe;
       const cardModel = createCard(recipe);
@@ -15,7 +14,6 @@ function displayGallery(filteredRecipes) {
 
       section.appendChild(cardEl);
     });
-  //}
 }
 
 function createCard(recipe) {
@@ -64,15 +62,15 @@ function createCard(recipe) {
 function recipesCounter() {
   const counterWrapper = document.querySelector(".recipes_counter");
   const count = filteredRecipes.length;
-  console.log("count size is ⬇︎");
-  console.log(count);
+  
 
   counterWrapper.innerHTML = "";
   count <= 1 ? counterWrapper.innerHTML = `<p>${count} recette</p>` : counterWrapper.innerHTML = `<p>${count} recettes</p>`;
 
   if (count === 0) {
     console.log("count is 0");
-    const error = `<p>😢 Aucune recette n'a été trouvée, veuillez modifier votre recherche.</p>`
+    const error = `<p>😢 Aucune recette ne contient ‘${inputValue.toLowerCase()}’, vous pouvez chercher «
+    tarte aux pommes », « poisson »</p>`
     document.getElementById("error").innerHTML = error;
   }
 }
