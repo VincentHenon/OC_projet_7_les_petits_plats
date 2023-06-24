@@ -216,11 +216,6 @@ function removeTag(tagEl) {
 }
 
 function getFilteredRecipes() {
-
-  console.log("tagList is ⬇︎");
-  console.log(tagList.length, "tag(s)")
-  //console.log(tagList);
-
   let tempFilteredRecipes = [];
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
@@ -241,29 +236,17 @@ function getFilteredRecipes() {
   
   filteredRecipes = tempFilteredRecipes;
 
-  /*// METHOD FILTER()
-  filteredRecipes = filteredRecipes.filter(recipe =>
-    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue) ||
-    recipe.description.toLowerCase().includes(searchValue) ||
-    recipe.name.includes(searchValue))
-  )*/
-
-console.log("filtered recipes by search ⬇︎");
-console.log(filteredRecipes.length, "recette(s)")
-
   if (tagList.length !== 0) {
-      filteredRecipes = filteredRecipes.filter(recipe =>
-          tagList.every(tag =>
-              recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
-              recipe.appliance.toLowerCase().includes(tag) ||
-              recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-              )
-          )
-      )
-      console.log("filtered recipes by tag ⬇︎");
-      console.log(filteredRecipes.length, "recette(s)")
-      //console.log(filteredRecipes);
+    filteredRecipes = filteredRecipes.filter(recipe =>
+        tagList.every(tag =>
+            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
+            recipe.appliance.toLowerCase().includes(tag) ||
+            recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+            )
+        )
+    )
   }
+
   // relaunch the whole process.
   filter(filteredRecipes);
   recipesCounter() // create the recipes' counter
