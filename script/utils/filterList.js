@@ -48,7 +48,7 @@ function getApplianceList() {
   applianceNewList = checkInputField(applianceList, applianceMenu, applianceBtn, applianceNewList);
 }
 
-function getUtensilList(s) {
+function getUtensilList() {
   const utensilBtn = document.querySelector(".btn_utensils");
   const utensilMenu = utensilBtn.querySelector(".result_list");
 
@@ -177,9 +177,6 @@ function createTag(newList, menu) {
     // render cards again.
     displayGallery(filteredRecipes);
 
-    // relaunch the whole process.
-    //filter(filteredRecipes);
-
     // display short list inside the menu
     const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
     menu.innerHTML = listEl;
@@ -216,9 +213,6 @@ function removeTag(tagEl) {
 
     // display the gallery
     displayGallery(filteredRecipes);
-
-    // relaunch the whole process and create the loop.
-    //filter(filteredRecipes);
 }
 
 
@@ -227,7 +221,6 @@ function getFilteredRecipes() {
 
   console.log("tagList is ⬇︎");
   console.log(tagList.length, "tag(s)")
-  //console.log(tagList);
 
   let tempFilteredRecipes = [];
   filteredRecipes = allRecipes;
@@ -270,8 +263,7 @@ console.log(filteredRecipes.length, "recette(s)")
           )
       )
       console.log("filtered recipes by tag ⬇︎");
-      console.log(filteredRecipes.length, "recette(s)")
-      //console.log(filteredRecipes);
+      console.log(filteredRecipes.length, "recette(s)");
   }
   // relaunch the whole process.
   filter(filteredRecipes);
