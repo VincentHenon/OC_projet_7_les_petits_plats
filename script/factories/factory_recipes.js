@@ -69,7 +69,7 @@ function recipesCounter() {
 
   if (count === 0) {
     console.log("count is 0");
-    const error = `<p>😢 Aucune recette ne contient ‘${inputValue.toLowerCase()}’, vous pouvez chercher «
+    const error = `<p>😢 Aucune recette ne contient ‘${searchValue}’, vous pouvez chercher «
     tarte aux pommes », « poisson »</p>`
     document.getElementById("error").innerHTML = error;
   }

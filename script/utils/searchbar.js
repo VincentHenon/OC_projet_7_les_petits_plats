@@ -2,36 +2,37 @@ const searchBar = document.getElementById("search_input");
 const magnifyGlass = document.querySelector(".magnifyGlass_bg");
 const xMarkEl = document.querySelector(".input_Xmark");
 
-function checkSearchBar() {
-    searchBar.addEventListener("input", () => {
-        // if user click on the search button
-        magnifyGlass.addEventListener("click", () => {
-            launchSearch();
-        })
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                launchSearch();
-            }
-            if (e.key === "Escape") {
-                e.preventDefault();
-                emptySearch();
-            }
-        })
+// listen to the magnify icon's click
+magnifyGlass.addEventListener("click", () => {
+    launchSearch();
+})
 
-        if (searchBar.value.length !== 0) {
-            xMarkEl.classList.add("XmarkShow");
-            xMarkEl.addEventListener("click", () => {
-                emptySearch();
-            })
-        }
-        else {
-            xMarkEl.classList.remove("XmarkShow");
-            filteredRecipes = getFilteredRecipes();
-        }
-    })
-    return filteredRecipes;
-}
+// listen to Enter and Escape keys
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        launchSearch();
+    }
+    if (e.key === "Escape") {
+        e.preventDefault();
+        emptySearch();
+    }
+})
+
+// listen to the xMark's searchBar's click
+xMarkEl.addEventListener("click", () => {
+    emptySearch();
+})
+
+// listen to the input change. at 3 letters show a xmark
+document.addEventListener("input",() => {
+    if (searchBar.value.length !== 0) {
+        xMarkEl.classList.add("XmarkShow");
+    }
+    else {
+        xMarkEl.classList.remove("XmarkShow");
+    }
+})
 
 function launchSearch() {
     // filter the recipes
