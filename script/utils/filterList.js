@@ -66,8 +66,6 @@ function getUtensilList() {
   // display the initial list once only.
   displayMenu(utensilList, utensilMenu);
 
-
-
   // check the events.
   utensilNewList = checkListClick(utensilList, utensilMenu, utensilBtn, utensilNewList);
   utensilNewList = checkInputField(utensilList, utensilMenu, utensilBtn, utensilNewList);
@@ -215,30 +213,8 @@ function removeTag(tagEl) {
 }
 
 function getFilteredRecipes() {
-
-  console.log("tagList is ⬇︎");
-  console.log(tagList.length, "tag(s)")
-  //console.log(tagList);
-
-  let tempFilteredRecipes = [];
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
-
-  // METHOD FOREACH()
-  /*filteredRecipes.forEach((recipe) => {
-    const { name, description, ingredients } = recipe;
-    const isNameMatch = name.toLowerCase().includes(searchValue);
-    const isDescriptionMatch = description.toLowerCase().includes(searchValue);
-    const isIngredientMatch = ingredients.some(({ ingredient }) =>
-      ingredient.toLowerCase().includes(searchValue)
-    );
-  
-    if (isNameMatch || isDescriptionMatch || isIngredientMatch) {
-      tempFilteredRecipes.push(recipe);
-    } 
-  });
-  
-  filteredRecipes = tempFilteredRecipes;*/
 
   // METHOD FILTER()
   filteredRecipes = filteredRecipes.filter(recipe =>
@@ -247,49 +223,18 @@ function getFilteredRecipes() {
     recipe.name.toLowerCase().includes(searchValue))
   )
 
-console.log("filtered recipes by search ⬇︎");
-console.log(filteredRecipes.length, "recette(s)")
-
-  // METHOD FILTER()
+  // METHOD FILTER() for DROP MENUS
   if (tagList.length !== 0) {
-      filteredRecipes = filteredRecipes.filter(recipe =>
-          tagList.every(tag =>
-              recipe.ingredients.some(ingredient => 
-                ingredient.ingredient.toLowerCase().includes(tag) ||
-                recipe.appliance.toLowerCase().includes(tag) ||
-                recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-              )
-          )
-      )
-      console.log("filtered recipes by tag ⬇︎");
-      console.log(filteredRecipes.length, "recette(s)");
-  }
-
-  // METHOD FOREACH()
-  /*if (tagList.length !== 0) {
-    tempFilteredRecipes = [];
-    filteredRecipes.forEach(recipe => {
-      const { appliance, ustensils, ingredients } = recipe;
+    filteredRecipes = filteredRecipes.filter(recipe =>
       tagList.every(tag =>
-        ingredients.some(ingredient => {
-          const isIngredientMatch = ingredient.ingredient.toLowerCase().includes(tag);
-          const isApplianceMatch = appliance.toLowerCase().includes(tag);
-          const isUtensilMatch = ustensils.some(ustensil => ustensil.toLowerCase().includes(tag));
-
-          if (isIngredientMatch || isApplianceMatch || isUtensilMatch && !tempFilteredRecipes.includes(recipe)) {
-            tempFilteredRecipes.push(recipe);
-          } 
-        })
-      )  
-    })
-      
-      filteredRecipes = tempFilteredRecipes;
-
-      console.log("filtered recipes by tag ⬇︎");
-      console.log(filteredRecipes.length, "recette(s)")
-      console.log("filtered recipes is ⬇︎");
-      console.log(filteredRecipes);
-  }*/
+        recipe.ingredients.some(ingredient => 
+          ingredient.ingredient.toLowerCase().includes(tag) ||
+          recipe.appliance.toLowerCase().includes(tag) ||
+          recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+        )
+      )
+    )
+  }
 
   // relaunch the whole process.
   recipesCounter() // create the recipes' counter
@@ -297,35 +242,27 @@ console.log(filteredRecipes.length, "recette(s)")
 }
 
 function updateList() {
+  // create a set to get the list without duplicate.
+  const ingredientSet = new Set();
 
-
-// create a set to get the list without duplicate.
-const ingredientSet = new Set();
-
-filteredRecipes.forEach((recipe) => {
-  recipe.ingredients.forEach((ingredient) => {
-    const ingredientName = ingredient.ingredient.toLowerCase();
-    ingredientSet.add(ingredientName);
+  filteredRecipes.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      const ingredientName = ingredient.ingredient.toLowerCase();
+      ingredientSet.add(ingredientName);
+    });
   });
-});
 
-// store the list found.
-ingredientList = Array.from(ingredientSet);  
+  // store the list found.
+  ingredientList = Array.from(ingredientSet);  
 
-// create a set to get the list without duplicate.
-const applianceSet = new Set();
+  // create a set to get the list without duplicate.
+  const applianceSet = new Set();
 
-filteredRecipes.forEach((recipe) => {
-  const applianceName = recipe.appliance.toLowerCase();
-  applianceSet.add(applianceName);
-});
+  filteredRecipes.forEach((recipe) => {
+    const applianceName = recipe.appliance.toLowerCase();
+    applianceSet.add(applianceName);
+  });
 
-// store the list found.
-applianceList = Array.from(applianceSet);
+  // store the list found.
+  applianceList = Array.from(applianceSet);
 }
-
-// FAIRE DEUX BRANCHES GITHUB
-
-// DIAGRAM pas en parallèle 
-
-// BENCHMARK
