@@ -177,9 +177,6 @@ function createTag(newList, menu) {
     // render cards again.
     displayGallery(filteredRecipes);
 
-    // relaunch the whole process.
-    //filter(filteredRecipes);
-
     // display short list inside the menu
     const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
     menu.innerHTML = listEl;
@@ -209,19 +206,14 @@ function removeTag(tagEl) {
     tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
 
     // reset the filtered recipes.
-    filteredRecipes = getFilteredRecipes(); // passer en paramètre => la liste des tags.
+    filteredRecipes = getFilteredRecipes();
 
     // remove the filter tag.
     tagEl.remove();
 
     // display the gallery
     displayGallery(filteredRecipes);
-
-    // relaunch the whole process and create the loop.
-    //filter(filteredRecipes);
 }
-
-
 
 function getFilteredRecipes() {
 
@@ -233,7 +225,7 @@ function getFilteredRecipes() {
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
 
-  /*// METHOD FOR()
+  // METHOD FOREACH()
   filteredRecipes.forEach((recipe) => {
     const { name, description, ingredients } = recipe;
     const isNameMatch = name.toLowerCase().includes(searchValue);
@@ -247,18 +239,17 @@ function getFilteredRecipes() {
     }
   });
   
-  filteredRecipes = tempFilteredRecipes;*/
+  filteredRecipes = tempFilteredRecipes;
 
-  // METHOD FILTER()
+  /*// METHOD FILTER()
   filteredRecipes = filteredRecipes.filter(recipe =>
     recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue) ||
     recipe.description.toLowerCase().includes(searchValue) ||
     recipe.name.includes(searchValue))
-  )
+  )*/
 
 console.log("filtered recipes by search ⬇︎");
 console.log(filteredRecipes.length, "recette(s)")
-//console.log(filteredRecipes);*/
 
   if (tagList.length !== 0) {
       filteredRecipes = filteredRecipes.filter(recipe =>
