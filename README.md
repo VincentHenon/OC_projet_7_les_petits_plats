@@ -5,4 +5,4 @@
 - filter_method
 
 benchmark results : 
-    https://jsben.ch/UZAib
+    https://jsben.ch/TTsG1
