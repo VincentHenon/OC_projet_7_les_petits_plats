@@ -150,9 +150,6 @@ function getFilteredRecipes() {
     recipe.name.toLowerCase().includes(searchValue))
   )
 
-  console.log("getFilteredRecipes() =>filtered recipes is ⬇︎");
-  console.log(filteredRecipes.length);
-
   // METHOD FILTER() for DROP MENUS
   if (tagList.length !== 0) {
     filteredRecipes = filteredRecipes.filter(recipe =>

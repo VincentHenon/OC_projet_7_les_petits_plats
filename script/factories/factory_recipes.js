@@ -68,8 +68,7 @@ function recipesCounter() {
   count <= 1 ? counterWrapper.innerHTML = `<p>${count} recette</p>` : counterWrapper.innerHTML = `<p>${count} recettes</p>`;
 
   if (count === 0) {
-    console.log("count is 0");
-    const error = `<p>😢 Aucune recette ne contient ‘${inputValue.toLowerCase()}’, vous pouvez chercher «
+    const error = `<p>😢 Aucune recette ne contient ‘${searchBar.value.toLowerCase()}’, vous pouvez chercher «
     tarte aux pommes », « poisson »</p>`
     document.getElementById("error").innerHTML = error;
   }

@@ -31,14 +31,7 @@ async function init() {
   allRecipes = recipes.recipes;
   filteredRecipes = allRecipes;
 
-  filter();
+  updateList();
   displayGallery(allRecipes);
   recipesCounter(filteredRecipes);
-}
-
-function filter() {
-  getIngredientList();
-  getApplianceList();
-  getUtensilList();
-  checkSearchBar();
 }
