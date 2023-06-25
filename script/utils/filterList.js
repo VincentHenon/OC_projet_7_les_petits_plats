@@ -1,75 +1,15 @@
-// getting all lists from the recipes
-function getIngredientList() {
+  // create a set to get the list without duplicate.
+  let ingredientSet = new Set();
+  let applianceSet = new Set();
+  let utensilSet = new Set();
+
+  // define dropmenu buttons
   const ingredientBtn = document.querySelector(".btn_ingredients");
   const ingredientMenu = ingredientBtn.querySelector(".result_list");
-
-  // create a set to get the list without duplicate.
-  const ingredientSet = new Set();
-
-  filteredRecipes.forEach((recipe) => {
-    recipe.ingredients.forEach((ingredient) => {
-      const ingredientName = ingredient.ingredient.toLowerCase();
-      ingredientSet.add(ingredientName);
-    });
-  });
-
-  // store the list found.
-    ingredientList = Array.from(ingredientSet);  
-  
-  // display the initial list once only.
-  displayMenu(ingredientList, ingredientMenu); 
-
-  // check the events.
-    ingredientNewList = checkListClick(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
-    ingredientNewList = checkInputField(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
-}
-
-function getApplianceList() {
   const applianceBtn = document.querySelector(".btn_appareils");
   const applianceMenu = applianceBtn.querySelector(".result_list");
-
-  // create a set to get the list without duplicate.
-  const applianceSet = new Set();
-
-  filteredRecipes.forEach((recipe) => {
-    const applianceName = recipe.appliance.toLowerCase();
-    applianceSet.add(applianceName);
-  });
-
-  // store the list found.
-  applianceList = Array.from(applianceSet);
-
-  // display the initial list once only.
-  displayMenu(applianceList, applianceMenu);
-  
-  // check the events.
-  applianceNewList = checkListClick(applianceList, applianceMenu, applianceBtn, applianceNewList);
-  applianceNewList = checkInputField(applianceList, applianceMenu, applianceBtn, applianceNewList);
-}
-
-function getUtensilList() {
   const utensilBtn = document.querySelector(".btn_utensils");
   const utensilMenu = utensilBtn.querySelector(".result_list");
-
-  // create a set to get the list without duplicate.
-  const utensilSet = new Set();
-
-  filteredRecipes.forEach((recipe) => {
-    recipe.ustensils.forEach((utensil) => {
-      utensilSet.add(utensil.toLowerCase());
-    });
-  });
-
-  // store the list found.
-  utensilList = Array.from(utensilSet);
-
-  // display the initial list once only.
-  displayMenu(utensilList, utensilMenu);
-
-  // check the events.
-  utensilNewList = checkListClick(utensilList, utensilMenu, utensilBtn, utensilNewList);
-  utensilNewList = checkInputField(utensilList, utensilMenu, utensilBtn, utensilNewList);
-}
 
 // factorised functions
 function checkListClick(list, menu, newList) {
@@ -87,8 +27,7 @@ function checkListClick(list, menu, newList) {
         (item) => item.toLowerCase() === selectedItem.toLowerCase()
       );
 
-      // update the HTML and create the TAG.
-      updateDisplay(newList, menu);
+      // Create the TAG.
       createTag(newList, menu);
     });
   });
@@ -107,10 +46,9 @@ function checkInputField(list, menu, btn, newList) {
       // find matching item in the list
       newList = list.filter((item) => item.toLowerCase().includes(inputValue));
 
-      // update the results and 
-      updateDisplay(newList, menu, btn); // display again the menu
-      checkListClick(newList, menu, btn); // check if ingredient is clicked in the menu
-      // }
+      updateDisplay(newList, menu, btn); // update the display as the user type
+      checkListClick(newList, menu, btn); // check if item is clicked in the menu
+
     } else {
       // in case where nothing typed initialize list and render it
       newList = list;
@@ -118,15 +56,6 @@ function checkInputField(list, menu, btn, newList) {
     }
   });
   return newList;
-}
-
-function displayMenu(list, menu) {
-
-    // clear the current menu.
-    menu.innerHTML = "";
-    // render the menu
-    let listEl = list.map((item) => `<li>${item}</li>`).join(""); 
-    menu.innerHTML = listEl;
 }
 
 function updateDisplay(newList, menu) {
@@ -171,31 +100,30 @@ function createTag(newList, menu) {
     // update the filtered recipes variable.
     filteredRecipes = getFilteredRecipes(tagList);
 
-    // render cards again.
-    displayGallery(filteredRecipes);
-
-    // display short list inside the menu
+    // display short list inside the menu.
     const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
     menu.innerHTML = listEl;
 
+    // select all xMark within the tags and the menu.
     const tag_Xmark = document.querySelectorAll(".tag_xmark");
     const selectedItem_Xmark = document.querySelectorAll(".selected_xmark");
 
     // listen to the event.
     selectedItem_Xmark.forEach((selectedItem) => { 
         selectedItem.addEventListener("click", () => {
-            removeTag(tagEl)
+          removeTag(tagEl);
         })
     })
     // listen to the event.
     tag_Xmark.forEach((tag) => { 
         tag.addEventListener("click", () => {
-            removeTag(tagEl)
+          removeTag(tagEl);
         }) 
     })
 }
 
 function removeTag(tagEl) {
+    console.log("tagEl", tagEl);
     
     let tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
 
@@ -223,6 +151,9 @@ function getFilteredRecipes() {
     recipe.name.toLowerCase().includes(searchValue))
   )
 
+  console.log("getFilteredRecipes() =>filtered recipes is ⬇︎");
+  console.log(filteredRecipes.length);
+
   // METHOD FILTER() for DROP MENUS
   if (tagList.length !== 0) {
     filteredRecipes = filteredRecipes.filter(recipe =>
@@ -236,15 +167,21 @@ function getFilteredRecipes() {
     )
   }
 
-  // relaunch the whole process.
-  recipesCounter() // create the recipes' counter
+  // update all dropmenu list
+  updateList();
+
+  // create the recipes' counter
+  recipesCounter(); 
   return filteredRecipes;
 }
 
 function updateList() {
-  // create a set to get the list without duplicate.
-  const ingredientSet = new Set();
+  // reset all the sets.
+  ingredientSet.clear();
+  applianceSet.clear();
+  utensilSet.clear();
 
+  // create a set for ingredientList.
   filteredRecipes.forEach((recipe) => {
     recipe.ingredients.forEach((ingredient) => {
       const ingredientName = ingredient.ingredient.toLowerCase();
@@ -252,17 +189,34 @@ function updateList() {
     });
   });
 
-  // store the list found.
-  ingredientList = Array.from(ingredientSet);  
-
-  // create a set to get the list without duplicate.
-  const applianceSet = new Set();
-
+  // create a set for applianceList.
   filteredRecipes.forEach((recipe) => {
     const applianceName = recipe.appliance.toLowerCase();
     applianceSet.add(applianceName);
   });
 
-  // store the list found.
+  // create a set for utensilList.
+  filteredRecipes.forEach((recipe) => {
+    recipe.ustensils.forEach((utensil) => {
+      utensilSet.add(utensil.toLowerCase());
+    });
+  });
+
+  // store the list found and update the result.
+  ingredientList = Array.from(ingredientSet);
+  updateDisplay(ingredientList, ingredientMenu);
+  ingredientNewList = checkListClick(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
+  ingredientNewList = checkInputField(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
+
+  // store the list found and update the result.
   applianceList = Array.from(applianceSet);
+  updateDisplay(applianceList, applianceMenu);
+  applianceNewList = checkListClick(applianceList,applianceMenu,applianceBtn,applianceNewList);
+  applianceNewList = checkInputField(applianceList,applianceMenu,applianceBtn,applianceNewList);
+
+  // store the list found and update the result.
+  utensilList = Array.from(utensilSet);
+  updateDisplay(utensilList, utensilMenu);
+  utensilNewList = checkListClick(utensilList,utensilMenu,utensilBtn,utensilNewList);
+  utensilNewList = checkInputField(utensilList,utensilMenu,utensilBtn,utensilNewList);
 }
