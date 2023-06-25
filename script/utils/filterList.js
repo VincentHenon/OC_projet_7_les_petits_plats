@@ -2,6 +2,7 @@
   let ingredientSet = new Set();
   let applianceSet = new Set();
   let utensilSet = new Set();
+  let tempFilteredRecipes = [];
 
   // define dropmenu buttons
   const ingredientBtn = document.querySelector(".btn_ingredients");
@@ -28,7 +29,7 @@ function checkListClick(list, menu, newList) {
       );
 
       // Create the TAG.
-      createTag(newList, menu);
+      createTag(newList, selectedItem,menu);
     });
   });
   return newList;
@@ -77,10 +78,8 @@ function updateDisplay(newList, menu) {
   }
 }
 
-function createTag(newList, menu) {
-  
-    // extract the name's tag from the menu
-    const tagName = menu.querySelector("li").textContent;
+function createTag(newList, selectedItem, menu) {
+    const tagName = selectedItem;
     let tagEl;
     const tagWrapper = document.querySelector(".filters_tags_wrapper");
 
@@ -99,6 +98,8 @@ function createTag(newList, menu) {
 
     // update the filtered recipes variable.
     filteredRecipes = getFilteredRecipes(tagList);
+
+    displayGallery(filteredRecipes);
 
     // display short list inside the menu.
     const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
@@ -123,8 +124,6 @@ function createTag(newList, menu) {
 }
 
 function removeTag(tagEl) {
-    console.log("tagEl", tagEl);
-    
     let tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
 
     // remove the tag from the tagList.
@@ -141,7 +140,6 @@ function removeTag(tagEl) {
 }
 
 function getFilteredRecipes() {
-  let tempFilteredRecipes = [];
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
 
@@ -160,16 +158,26 @@ function getFilteredRecipes() {
   });
   
   filteredRecipes = tempFilteredRecipes;
+  tempFilteredRecipes = [];
 
   if (tagList.length !== 0) {
-    filteredRecipes = filteredRecipes.filter(recipe =>
-        tagList.every(tag =>
-            recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(tag) ||
-            recipe.appliance.toLowerCase().includes(tag) ||
-            recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-            )
-        )
-    )
+    filteredRecipes.forEach((recipe) => {
+      const { ustensils, appliance, ingredients } = recipe;
+      const isRecipeMatch = tagList.every((tag) =>
+        ingredients.some((ingredient) =>
+          ingredient.ingredient.toLowerCase().includes(tag)
+        ) ||
+        appliance.toLowerCase().includes(tag) ||
+        ustensils.some((ustensil) => ustensil.toLowerCase().includes(tag))
+      );
+  
+      if (isRecipeMatch) {
+        tempFilteredRecipes.push(recipe);
+      }
+    });
+  
+    filteredRecipes = tempFilteredRecipes;
+    tempFilteredRecipes = [];
   }
 
   // update all dropmenu list
