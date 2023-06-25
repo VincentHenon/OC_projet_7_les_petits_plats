@@ -68,7 +68,7 @@ function recipesCounter() {
   count <= 1 ? counterWrapper.innerHTML = `<p>${count} recette</p>` : counterWrapper.innerHTML = `<p>${count} recettes</p>`;
 
   if (count === 0) {
-    const error = `<p>😢 Aucune recette ne contient la recherche ☞ "${searchBar.value}", vous pouvez chercher «
+    const error = `<p>😢 Aucune recette ne contient la recherche ☞ "${searchBar.value.toLowerCase()}", vous pouvez chercher «
     tarte aux pommes », « poisson »</p>`
     document.getElementById("error").innerHTML = error;
   }
