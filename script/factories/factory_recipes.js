@@ -77,5 +77,4 @@ function recipesCounter() {
     error = "";
     document.getElementById("error").innerHTML = error;
   }
-
 }
