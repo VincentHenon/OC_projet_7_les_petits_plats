@@ -62,14 +62,20 @@ function createCard(recipe) {
 function recipesCounter() {
   const counterWrapper = document.querySelector(".recipes_counter");
   const count = filteredRecipes.length;
+  let error = "";
   
 
   counterWrapper.innerHTML = "";
   count <= 1 ? counterWrapper.innerHTML = `<p>${count} recette</p>` : counterWrapper.innerHTML = `<p>${count} recettes</p>`;
 
   if (count === 0) {
-    const error = `<p>😢 Aucune recette ne contient la recherche ☞ "${searchBar.value.toLowerCase()}", vous pouvez chercher «
+    error = `<p>😢 Aucune recette ne contient la recherche ☞ "${searchBar.value.toLowerCase()}", vous pouvez chercher «
     tarte aux pommes », « poisson »</p>`
     document.getElementById("error").innerHTML = error;
   }
+  else {
+    error = "";
+    document.getElementById("error").innerHTML = error;
+  }
+
 }

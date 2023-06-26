@@ -29,7 +29,7 @@ function checkListClick(list, menu, newList) {
       );
 
       // Create the TAG.
-      createTag(newList, selectedItem,menu);
+      createTag(newList, selectedItem, menu);
     });
   });
   return newList;
