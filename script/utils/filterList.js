@@ -60,108 +60,158 @@ function checkInputField(list, menu, btn, newList) {
 }
 
 function updateDisplay(newList, menu) {
-  // clear the current menu.
-  menu.innerHTML = "";
 
-  if (newList.length !== 0) {
-    // if list is not empty then we build the menu
-    const listEl = newList.map((item) => `<li>${item}</li>`).join("");
-    menu.innerHTML = listEl;
-  }
-  else if (newList.length === 1){
-    const listEl = `<p>${item}</p>`;
-    menu.innerHTML = listEl;
-  } else {
-    // else there is no result
-    const noResult = `<p class="noResult">Aucun résultat</p>`;
-    menu.innerHTML = noResult;
+  const selectedItem = menu.querySelector(".selected_list");
+
+  if (selectedItem === null) {
+    if (newList.length !== 0) {
+      // if list is not empty then we build the menu
+      const listEl = newList.map((item) => `<li>${item}</li>`).join("");
+      menu.innerHTML = listEl;
+    }
+    else if (newList.length === 1){
+      const listEl = `<p>${item}</p>`;
+      menu.innerHTML = listEl;
+    } else {
+      // else there is no result
+      const noResult = `<p class="noResult">Aucun résultat</p>`;
+      menu.innerHTML = noResult;
+    }
   }
 }
 
 function createTag(newList, selectedItem, menu) {
-    const tagName = selectedItem;
-    let tagEl;
-    const tagWrapper = document.querySelector(".filters_tags_wrapper");
+  const tagName = selectedItem;
+  const tagWrapper = document.querySelector(".filters_tags_wrapper");
+  let tagEl;
 
-    // if new tag is not in the tagList, push it in the array and display it
-    if (!tagList.includes(tagName)) {
-        tagList.push(tagName);
+  // prevent duplicates in tagList.
+  if (!tagList.includes(tagName)) {
+    tagList.push(tagName);
+  }
+  // update the filtered recipes variable.
+  filteredRecipes = getFilteredRecipes(tagList);
 
-    // render the filter tag.
-    tagEl = document.createElement("div");
-    tagEl.classList.add("filters_tag");
-    tagEl.innerHTML = `
-            <p class="tag_content">${tagName}</p>
-            <img class="tag_xmark" src="./assets/icons/xMark.svg" alt="icone d'une croix" />`;
-    tagWrapper.appendChild(tagEl);
-    }
+  displayGallery(filteredRecipes);
 
-    // update the filtered recipes variable.
-    filteredRecipes = getFilteredRecipes(tagList);
+  console.log(menu);
 
-    displayGallery(filteredRecipes);
+  // render the filter tag.
+  tagEl = document.createElement("div");
+  tagEl.classList.add("filters_tag");
+  tagEl.innerHTML = `
+          <p class="tag_content">${tagName}</p>
+          <img class="tag_xmark" src="./assets/icons/xMark.svg" alt="icone d'une croix" />`;
+  tagWrapper.appendChild(tagEl, menu);
 
-    // display short list inside the menu.
-    const listEl = `<div class="selected_list"><li class="selected_item">${newList[0]}</li><img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" /></div>`;
-    menu.innerHTML = listEl;
+  // check tag's Xmark click.
+  const tag_Xmark = tagEl.querySelector(".tag_xmark") 
+  tag_Xmark.addEventListener("click", () => {
+    removeTag(tagEl, menu);
+  })
 
-    // select all xMark within the tags and the menu.
-    const tag_Xmark = document.querySelectorAll(".tag_xmark");
-    const selectedItem_Xmark = document.querySelectorAll(".selected_xmark");
+  // display selected item in the menu.
+  const listEl = `<div class="selected_list">
+                    <li class="selected_item">${newList[0]}</li>
+                    <img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" />
+                  </div>`;
+  menu.innerHTML = listEl;
 
-    // listen to the event.
-    selectedItem_Xmark.forEach((selectedItem) => { 
-        selectedItem.addEventListener("click", () => {
-          removeTag(tagEl);
-        })
-    })
-    // listen to the event.
-    tag_Xmark.forEach((tag) => { 
-        tag.addEventListener("click", () => {
-          removeTag(tagEl);
-        }) 
-    })
+  // check selected item's Xmark click.
+  const selected_Xmark = menu.querySelector(".selected_xmark") 
+  selected_Xmark.addEventListener("click", () => {
+    removeTag(tagEl, menu);
+  })
 }
 
-function removeTag(tagEl) {
-    let tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
+function removeTag(tagEl, menu) {
+  const tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
+  const selectedItem = menu.querySelector(".selected_list");
 
-    // remove the tag from the tagList.
-    tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
+  // remove the tag from the tagList.
+  tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
 
-    // reset the filtered recipes.
-    filteredRecipes = getFilteredRecipes();
+  // remove the filter tag.
+  tagEl.remove();
 
-    // remove the filter tag.
-    tagEl.remove();
+  // remove the selected item.
+  selectedItem.remove();
 
-    // display the gallery
-    displayGallery(filteredRecipes);
+  // reset the filtered recipes.
+  filteredRecipes = getFilteredRecipes();
+
+  // display the gallery
+  displayGallery(filteredRecipes);
 }
 
 function getFilteredRecipes() {
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
 
-  // METHOD FILTER()
-  filteredRecipes = filteredRecipes.filter(recipe =>
-    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue) ||
-    recipe.description.toLowerCase().includes(searchValue) ||
-    recipe.name.toLowerCase().includes(searchValue))
-  )
-
-  // METHOD FILTER() for DROP MENUS
-  if (tagList.length !== 0) {
-    filteredRecipes = filteredRecipes.filter(recipe =>
-      tagList.every(tag =>
-        recipe.ingredients.some(ingredient => 
-          ingredient.ingredient.toLowerCase().includes(tag) ||
-          recipe.appliance.toLowerCase().includes(tag) ||
-          recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-        )
-      )
-    )
+  for (let i = 0; i < filteredRecipes.length; i++) {
+    const recipe = filteredRecipes[i];
+    const { name, description, ingredients } = recipe;
+    const isNameMatch = name.toLowerCase().includes(searchValue);
+    const isDescriptionMatch = description.toLowerCase().includes(searchValue);
+    let isIngredientMatch = false;
+  
+    for (let j = 0; j < ingredients.length; j++) {
+      const ingredient = ingredients[j].ingredient.toLowerCase();
+      if (ingredient.includes(searchValue)) {
+        isIngredientMatch = true;
+        break;
+      }
+    }
+  
+    if (isNameMatch || isDescriptionMatch || isIngredientMatch) {
+      tempFilteredRecipes.push(recipe);
+    }
   }
+  
+  filteredRecipes = tempFilteredRecipes;
+  tempFilteredRecipes = [];
+  
+
+  //check if tagList is not empty
+  if (tagList.length !== 0) {
+    for (let i = 0; i < filteredRecipes.length; i++) {
+      const recipe = filteredRecipes[i];
+      const { ustensils, appliance, ingredients } = recipe;
+      let isRecipeMatch;
+  
+      for (let j = 0; j < tagList.length; j++) {
+        const tag = tagList[j];
+  
+        let isIngredientMatch = false;
+        for (let k = 0; k < ingredients.length; k++) {
+          const ingredient = ingredients[k].ingredient.toLowerCase();
+          if (ingredient.includes(tag)) {
+            isIngredientMatch = true;
+            break;
+          }
+        }
+  
+        if (
+          isIngredientMatch ||
+          appliance.toLowerCase().includes(tag) ||
+          ustensils.some((ustensil) => ustensil.toLowerCase().includes(tag))
+        ) {
+          isRecipeMatch = true;
+        } else {
+          isRecipeMatch = false;
+          break;
+        }
+      }
+  
+      if (isRecipeMatch) {
+        tempFilteredRecipes.push(recipe);
+      }
+    }
+  
+    filteredRecipes = tempFilteredRecipes;
+    tempFilteredRecipes = [];
+  }
+  
 
   // update all dropmenu list
   updateList();
