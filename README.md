@@ -1,8 +1,9 @@
 # OC_projet_7_les_petits_plats
 
-2 branches: 
-- forEach_method
-- filter_method
-
 benchmark results : 
-    https://jsben.ch/TTsG1
+
+between forEach() and filter()
+https://jsben.ch/TTsG1
+
+between for() and filter()
+https://jsben.ch/SqbyJ
