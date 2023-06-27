@@ -7,3 +7,6 @@ https://jsben.ch/TTsG1
 
 between for() and filter()
 https://jsben.ch/SqbyJ
+
+between the 3 methods
+https://jsben.ch/uwVkm
