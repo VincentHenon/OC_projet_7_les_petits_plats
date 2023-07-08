@@ -1,7 +1,9 @@
 @import url("https://cdn.jsdelivr.net/gh/jgthms/minireset.css@master/minireset.min.css");
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
 
-
+li {
+    list-style: none;
+}
 
 html {
     /*font-family: 'Anton', sans-serif;*/
