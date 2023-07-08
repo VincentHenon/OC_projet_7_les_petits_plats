@@ -4,6 +4,8 @@
   let utensilSet = new Set();
   let tempFilteredRecipes = [];
 
+  let selectedItem = [];
+
   // define dropmenu buttons
   const ingredientBtn = document.querySelector(".btn_ingredients");
   const ingredientMenu = ingredientBtn.querySelector(".result_list");
@@ -13,7 +15,7 @@
   const utensilMenu = utensilBtn.querySelector(".result_list");
 
 // factorised functions
-function checkListClick(list, menu, newList) {
+function checkListClick(list, menu) {
   const menuEl = menu.getElementsByTagName("li");
 
   // read through all <li> tags found
@@ -21,21 +23,15 @@ function checkListClick(list, menu, newList) {
     // listen to them
     li.addEventListener("click", () => {
       // get the text from the HTML element.
-      let selectedItem = li.textContent;
-
-      // filter the list by finding the clicked item
-      newList = list.filter(
-        (item) => item.toLowerCase() === selectedItem.toLowerCase()
-      );
+      let tag = li.textContent;
 
       // Create the TAG.
-      createTag(newList, selectedItem, menu);
+      createTag(menu, tag);
     });
   });
-  return newList;
 }
 
-function checkInputField(list, menu, btn, newList) {
+function checkInputField(list, menu, btn) {
   const inputEl = btn.querySelector(".input_dropdown");
 
   // listen to the input's dropdown
@@ -45,43 +41,41 @@ function checkInputField(list, menu, btn, newList) {
     if (inputValue.length >= 2) {
       
       // find matching item in the list
-      newList = list.filter((item) => item.toLowerCase().includes(inputValue));
+      list = list.filter((item) => item.toLowerCase().includes(inputValue));
 
-      updateDisplay(newList, menu, btn); // update the display as the user type
-      checkListClick(newList, menu, btn); // check if item is clicked in the menu
+      updateDisplay(list, menu); // update the display as the user type
+      checkListClick(list, menu); // check if item is clicked in the menu
 
     } else {
-      // in case where nothing typed initialize list and render it
-      newList = list;
-      updateDisplay(newList, menu, btn);
+      // rerender
+      updateDisplay(list, menu);
     }
   });
-  return newList;
 }
 
-function updateDisplay(newList, menu) {
+function updateDisplay(list, menu) {
+  // filter the list based on the tagList
+  list = list.filter(item => !tagList.includes(item));
 
-  const selectedItem = menu.querySelector(".selected_list");
+  const remainList = menu.querySelector(".remaining_list");
 
-  if (selectedItem === null) {
-    if (newList.length !== 0) {
-      // if list is not empty then we build the menu
-      const listEl = newList.map((item) => `<li>${item}</li>`).join("");
-      menu.innerHTML = listEl;
-    }
-    else if (newList.length === 1){
-      const listEl = `<p>${item}</p>`;
-      menu.innerHTML = listEl;
-    } else {
-      // else there is no result
-      const noResult = `<p class="noResult">Aucun résultat</p>`;
-      menu.innerHTML = noResult;
-    }
+  if (list.length !== 0) {
+    // if list is not empty then we build the menu
+    const listEl = list.map((item) => `<li>${item}</li>`).join("");
+    remainList.innerHTML = listEl;
+  }
+  else if (list.length === 1){
+    const listEl = `<p>${item}</p>`;
+    remainList.innerHTML = listEl;
+  } else {
+    // else there is no result
+    const noResult = `<p class="noResult">Aucun résultat</p>`;
+    remainList.innerHTML = noResult;
   }
 }
 
-function createTag(newList, selectedItem, menu) {
-  const tagName = selectedItem;
+function createTag(menu, tag) {
+  const tagName = tag;
   const tagWrapper = document.querySelector(".filters_tags_wrapper");
   let tagEl;
 
@@ -93,8 +87,6 @@ function createTag(newList, selectedItem, menu) {
   filteredRecipes = getFilteredRecipes(tagList);
 
   displayGallery(filteredRecipes);
-
-  console.log(menu);
 
   // render the filter tag.
   tagEl = document.createElement("div");
@@ -110,15 +102,18 @@ function createTag(newList, selectedItem, menu) {
     removeTag(tagEl, menu);
   })
 
-  // display selected item in the menu.
-  const listEl = `<div class="selected_list">
-                    <li class="selected_item">${newList[0]}</li>
-                    <img class="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" />
-                  </div>`;
-  menu.innerHTML = listEl;
+  // display selected item before list in the menu.
+  const itemEl = `
+  <div class="selected_list">
+    <li class="selected_item">${tagName}</li>
+    <img id="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" />
+  </div>
+`;
+
+  menu.insertAdjacentHTML("afterbegin", itemEl);
 
   // check selected item's Xmark click.
-  const selected_Xmark = menu.querySelector(".selected_xmark") 
+  const selected_Xmark = menu.querySelector("#selected_xmark");
   selected_Xmark.addEventListener("click", () => {
     removeTag(tagEl, menu);
   })
@@ -138,7 +133,7 @@ function removeTag(tagEl, menu) {
   selectedItem.remove();
 
   // reset the filtered recipes.
-  filteredRecipes = getFilteredRecipes();
+  filteredRecipes = getFilteredRecipes(tagList);
 
   // display the gallery
   displayGallery(filteredRecipes);
@@ -206,18 +201,18 @@ function updateList() {
   // store the list found and update the result.
   ingredientList = Array.from(ingredientSet);
   updateDisplay(ingredientList, ingredientMenu);
-  ingredientNewList = checkListClick(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
-  ingredientNewList = checkInputField(ingredientList,ingredientMenu,ingredientBtn,ingredientNewList);
+  checkListClick(ingredientList,ingredientMenu);
+  checkInputField(ingredientList,ingredientMenu,ingredientBtn);
 
+  
   // store the list found and update the result.
   applianceList = Array.from(applianceSet);
   updateDisplay(applianceList, applianceMenu);
-  applianceNewList = checkListClick(applianceList,applianceMenu,applianceBtn,applianceNewList);
-  applianceNewList = checkInputField(applianceList,applianceMenu,applianceBtn,applianceNewList);
+  checkListClick(applianceList,applianceMenu);
+  checkInputField(applianceList,applianceMenu,applianceBtn);
 
   // store the list found and update the result.
   utensilList = Array.from(utensilSet);
   updateDisplay(utensilList, utensilMenu);
-  utensilNewList = checkListClick(utensilList,utensilMenu,utensilBtn,utensilNewList);
-  utensilNewList = checkInputField(utensilList,utensilMenu,utensilBtn,utensilNewList);
+  checkListClick(utensilList,utensilMenu);
 }
