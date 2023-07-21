@@ -268,7 +268,7 @@ header {
     background-color: #FFD15B;
 }
 
-.selected_list {
+.selected_item_wrapper {
     display: flex;
     justify-content: space-between;
     background-color: #FFD15B;
