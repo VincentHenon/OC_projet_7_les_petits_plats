@@ -5,6 +5,7 @@
   let tempFilteredRecipes = [];
 
   let selectedItem = [];
+  let tagId;
 
   // define dropmenu buttons
   const ingredientBtn = document.querySelector(".btn_ingredients");
@@ -79,13 +80,14 @@ function createTag(menu, tag) {
   const tagWrapper = document.querySelector(".filters_tags_wrapper");
   let tagEl;
 
+  tagId ++;
+
   // prevent duplicates in tagList.
   if (!tagList.includes(tagName)) {
     tagList.push(tagName);
   }
   // update the filtered recipes variable.
   filteredRecipes = getFilteredRecipes(tagList);
-
   displayGallery(filteredRecipes);
 
   // render the filter tag.
@@ -93,50 +95,65 @@ function createTag(menu, tag) {
   tagEl.classList.add("filters_tag");
   tagEl.innerHTML = `
           <p class="tag_content">${tagName}</p>
-          <img class="tag_xmark" src="./assets/icons/xMark.svg" alt="icone d'une croix" />`;
-  tagWrapper.appendChild(tagEl, menu);
+          <img class="tag_xmark_${tagId}" src="./assets/icons/xMark.svg" alt="icone d'une croix" />`;
+  //tagWrapper.appendChild(tagEl, menu);
+  tagWrapper.insertAdjacentElement("beforeend", tagEl);
+
+  const onTagXmarkClick = () => {
+    removeTag(tagEl, menu);
+    
+  }
 
   // check tag's Xmark click.
-  const tag_Xmark = tagEl.querySelector(".tag_xmark") 
-  tag_Xmark.addEventListener("click", () => {
-    removeTag(tagEl, menu);
-  })
+  const tag_Xmark = tagEl.querySelector(`.tag_xmark_${tagId}`); 
+  tag_Xmark.addEventListener("click", onTagXmarkClick);
 
   // display selected item before list in the menu.
-  const itemEl = `
-  <div class="selected_list">
-    <li class="selected_item">${tagName}</li>
-    <img id="selected_xmark" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" />
-  </div>
-`;
+  const itemEl = `<div class="selected_item_wrapper">
+                    <li class="selected_item">${tagName}</li>
+                    <img class="selected_xmark_${tagId}" src="./assets/icons/filledXmark.svg" alt="icone d'une croix" />
+                  </div>
+                  `;
 
-  menu.insertAdjacentHTML("afterbegin", itemEl);
+  const selectedList = menu.querySelector(".selected_item");
+  selectedList.insertAdjacentHTML("beforeend", itemEl);
+
+
+  const onItemXmarkClick = () => {
+    removeTag(tagEl, menu);
+  }
 
   // check selected item's Xmark click.
-  const selected_Xmark = menu.querySelector("#selected_xmark");
-  selected_Xmark.addEventListener("click", () => {
-    removeTag(tagEl, menu);
-  })
+  const selected_Xmark = menu.querySelector(`.selected_xmark_${tagId}`);
+  selected_Xmark.addEventListener("click", onItemXmarkClick);
 }
 
 function removeTag(tagEl, menu) {
   const tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
-  const selectedItem = menu.querySelector(".selected_list");
+  const selectedItems = menu.querySelectorAll(".selected_item_wrapper");
+  let selectedItem; 
+  selectedItems.forEach(item => {
+    if (item.textContent.toLowerCase().includes(tagToRemove)) {
+      selectedItem = item;
+      return;
+    }
+  })
 
   // remove the tag from the tagList.
   tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
 
-  // remove the filter tag.
-  tagEl.remove();
-
   // remove the selected item.
   selectedItem.remove();
+
+  // remove the filter tag.
+  tagEl.remove();
 
   // reset the filtered recipes.
   filteredRecipes = getFilteredRecipes(tagList);
 
   // display the gallery
   displayGallery(filteredRecipes);
+
 }
 
 function getFilteredRecipes() {
