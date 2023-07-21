@@ -4,7 +4,7 @@
   let utensilSet = new Set();
   let tempFilteredRecipes = [];
 
-  let tagId = 0;
+  let tagId;
   let selectedItem = [];
 
   // define dropmenu buttons
@@ -126,13 +126,9 @@ function createTag(menu, tag) {
   // check selected item's Xmark click.
   const selected_Xmark = menu.querySelector(`.selected_xmark_${tagId}`);
   selected_Xmark.addEventListener("click", onItemXmarkClick);
-
-  console.log("tag list", tagWrapper);
-  console.log("selected item list", selectedList);
 }
 
 function removeTag(tagEl, menu) {
-  console.log("tag text : ",tagEl.textContent)
   const tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
   const selectedItems = menu.querySelectorAll(".selected_item_wrapper");
   let selectedItem; 
