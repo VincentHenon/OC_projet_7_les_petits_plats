@@ -4,8 +4,8 @@
   let utensilSet = new Set();
   let tempFilteredRecipes = [];
 
+  let tagId = 0;
   let selectedItem = [];
-  let tagId;
 
   // define dropmenu buttons
   const ingredientBtn = document.querySelector(".btn_ingredients");
@@ -99,14 +99,12 @@ function createTag(menu, tag) {
   //tagWrapper.appendChild(tagEl, menu);
   tagWrapper.insertAdjacentElement("beforeend", tagEl);
 
-  const onTagXmarkClick = () => {
-    removeTag(tagEl, menu);
-    
-  }
-
   // check tag's Xmark click.
   const tag_Xmark = tagEl.querySelector(`.tag_xmark_${tagId}`); 
-  tag_Xmark.addEventListener("click", onTagXmarkClick);
+ 
+  tag_Xmark.addEventListener("click", () => {
+    removeTag(tagEl, menu)
+  });
 
   // display selected item before list in the menu.
   const itemEl = `<div class="selected_item_wrapper">
@@ -118,26 +116,25 @@ function createTag(menu, tag) {
   const selectedList = menu.querySelector(".selected_item");
   selectedList.insertAdjacentHTML("beforeend", itemEl);
 
-
-  const onItemXmarkClick = () => {
-    removeTag(tagEl, menu);
-  }
-
   // check selected item's Xmark click.
   const selected_Xmark = menu.querySelector(`.selected_xmark_${tagId}`);
-  selected_Xmark.addEventListener("click", onItemXmarkClick);
+
+  selected_Xmark.addEventListener("click", () => {
+    removeTag(tagEl, menu)
+  });
 }
 
 function removeTag(tagEl, menu) {
   const tagToRemove = tagEl.querySelector(".tag_content").textContent.toLowerCase();
   const selectedItems = menu.querySelectorAll(".selected_item_wrapper");
-  let selectedItem; 
+  let selectedItem
   selectedItems.forEach(item => {
     if (item.textContent.toLowerCase().includes(tagToRemove)) {
       selectedItem = item;
       return;
     }
   })
+  console.log("selected Item", selectedItem)
 
   // remove the tag from the tagList.
   tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
