@@ -134,7 +134,6 @@ function removeTag(tagEl, menu) {
       return;
     }
   })
-  console.log("selected Item", selectedItem)
 
   // remove the tag from the tagList.
   tagList = tagList.filter(tag => tag.toLowerCase() !== tagToRemove);
