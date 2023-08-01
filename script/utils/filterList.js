@@ -152,28 +152,47 @@ function removeTag(tagEl, menu) {
 
 }
 
+// FOREACH_METHOD
+// filter the results based on input search and dropmenus
 function getFilteredRecipes() {
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
 
-  // METHOD FILTER()
-  filteredRecipes = filteredRecipes.filter(recipe =>
-    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue) ||
-    recipe.description.toLowerCase().includes(searchValue) ||
-    recipe.name.toLowerCase().includes(searchValue))
-  )
+  // METHOD FOREACH()
+  filteredRecipes.forEach((recipe) => {
+    const { name, description, ingredients } = recipe;
+    const isNameMatch = name.toLowerCase().includes(searchValue);
+    const isDescriptionMatch = description.toLowerCase().includes(searchValue);
+    const isIngredientMatch = ingredients.some(({ ingredient }) =>
+      ingredient.toLowerCase().includes(searchValue)
+    );
+  
+    if (isNameMatch || isDescriptionMatch || isIngredientMatch) {
+      tempFilteredRecipes.push(recipe);
+    }
+  });
+  
+  filteredRecipes = tempFilteredRecipes;
+  tempFilteredRecipes = [];
 
-  // METHOD FILTER() for DROP MENUS
   if (tagList.length !== 0) {
-    filteredRecipes = filteredRecipes.filter(recipe =>
-      tagList.every(tag =>
-        recipe.ingredients.some(ingredient => 
-          ingredient.ingredient.toLowerCase().includes(tag) ||
-          recipe.appliance.toLowerCase().includes(tag) ||
-          recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-        )
-      )
-    )
+    filteredRecipes.forEach((recipe) => {
+      const { ustensils, appliance, ingredients } = recipe;
+      const isRecipeMatch = tagList.every((tag) =>
+        ingredients.some((ingredient) =>
+          ingredient.ingredient.toLowerCase().includes(tag)
+        ) ||
+        appliance.toLowerCase().includes(tag) ||
+        ustensils.some((ustensil) => ustensil.toLowerCase().includes(tag))
+      );
+  
+      if (isRecipeMatch) {
+        tempFilteredRecipes.push(recipe);
+      }
+    });
+  
+    filteredRecipes = tempFilteredRecipes;
+    tempFilteredRecipes = [];
   }
 
   // update all dropmenu list
