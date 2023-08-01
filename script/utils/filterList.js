@@ -156,29 +156,71 @@ function getFilteredRecipes() {
   filteredRecipes = allRecipes;
   const searchValue = searchBar.value.toLowerCase();
 
-  // METHOD FILTER()
-  filteredRecipes = filteredRecipes.filter(recipe =>
-    recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchValue) ||
-    recipe.description.toLowerCase().includes(searchValue) ||
-    recipe.name.toLowerCase().includes(searchValue))
-  )
-
-  // METHOD FILTER() for DROP MENUS
-  if (tagList.length !== 0) {
-    filteredRecipes = filteredRecipes.filter(recipe =>
-      tagList.every(tag =>
-        recipe.ingredients.some(ingredient => 
-          ingredient.ingredient.toLowerCase().includes(tag) ||
-          recipe.appliance.toLowerCase().includes(tag) ||
-          recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
-        )
-      )
-    )
+  for (let i = 0; i < filteredRecipes.length; i++) {
+    const recipe = filteredRecipes[i];
+    const { name, description, ingredients } = recipe;
+    const isNameMatch = name.toLowerCase().includes(searchValue);
+    const isDescriptionMatch = description.toLowerCase().includes(searchValue);
+    let isIngredientMatch = false;
+  
+    for (let j = 0; j < ingredients.length; j++) {
+      const ingredient = ingredients[j].ingredient.toLowerCase();
+      if (ingredient.includes(searchValue)) {
+        isIngredientMatch = true;
+        break;
+      }
+    }
+  
+    if (isNameMatch || isDescriptionMatch || isIngredientMatch) {
+      tempFilteredRecipes.push(recipe);
+    }
   }
+  
+  filteredRecipes = tempFilteredRecipes;
+  tempFilteredRecipes = [];
+  
 
+  //check if tagList is not empty
+  if (tagList.length !== 0) {
+    for (let i = 0; i < filteredRecipes.length; i++) {
+      const recipe = filteredRecipes[i];
+      const { ustensils, appliance, ingredients } = recipe;
+      let isRecipeMatch;
+  
+      for (let j = 0; j < tagList.length; j++) {
+        const tag = tagList[j];
+  
+        let isIngredientMatch = false;
+        for (let k = 0; k < ingredients.length; k++) {
+          const ingredient = ingredients[k].ingredient.toLowerCase();
+          if (ingredient.includes(tag)) {
+            isIngredientMatch = true;
+            break;
+          }
+        }
+  
+        if (
+          isIngredientMatch ||
+          appliance.toLowerCase().includes(tag) ||
+          ustensils.some((ustensil) => ustensil.toLowerCase().includes(tag))
+        ) {
+          isRecipeMatch = true;
+        } else {
+          isRecipeMatch = false;
+          break;
+        }
+      }
+  
+      if (isRecipeMatch) {
+        tempFilteredRecipes.push(recipe);
+      }
+    }
+  
+    filteredRecipes = tempFilteredRecipes;
+    tempFilteredRecipes = [];
+  }
   // update all dropmenu list
   updateList();
-
   // create the recipes' counter
   recipesCounter(); 
   return filteredRecipes;
