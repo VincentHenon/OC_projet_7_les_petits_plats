@@ -10,3 +10,4 @@ https://jsben.ch/SqbyJ
 
 between the 3 methods
 https://jsben.ch/uwVkm
+https://tinyurl.com/34jtyjcd
